@@ -2,18 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iba_app/Languages/languages.dart';
 
-class StudentLoginScreen extends StatelessWidget {
+class StudentLoginScreen extends StatefulWidget {
   const StudentLoginScreen({Key? key}) : super(key: key);
 
+  @override
+  _StudentLoginScreenState createState() => _StudentLoginScreenState();
+}
+
+class _StudentLoginScreenState extends State<StudentLoginScreen> {
+  TextEditingController _password = TextEditingController();
+  TextEditingController _index = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize text controllers if needed
+  }
+
   String _getText(String key) {
-    return LanguageManager.getText(
-        key); // Utilize the LanguageManager to get translated text
+    return LanguageManager.getText(key);
   }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _password = TextEditingController();
-    TextEditingController _index = TextEditingController();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -31,7 +42,7 @@ class StudentLoginScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _getText("Login your student portal"),
+                            _getText("Login Your \nStudent Portal"),
                             style: TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
@@ -58,63 +69,44 @@ class StudentLoginScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors
-                                  .grey[200], // Set background color to gray
-                              borderRadius: BorderRadius.circular(
-                                  10.0), // Set border radius
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                             child: TextField(
                               controller: _index,
-
                               inputFormatters: [
-                                FilteringTextInputFormatter
-                                    .digitsOnly, // Allow only digits
-                                LengthLimitingTextInputFormatter(
-                                    10), // Limit input length to 10 characters
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(10),
                               ],
-                              keyboardType: TextInputType
-                                  .number, // Set keyboard type to number
+                              keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 labelText: _getText("Index Number"),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      10.0), // Set border radius
-                                  borderSide: BorderSide(
-                                    width: 10.0, // Set border width
-                                    // Set border color to match background
-                                  ),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(),
                                 ),
                               ),
                             ),
                           ),
                         ),
 
-                        SizedBox(
-                            height:
-                                10), // Add some space between the text fields
+                        SizedBox(height: 10),
+
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors
-                                  .grey[200], // Set background color to gray
-                              borderRadius: BorderRadius.circular(
-                                  10.0), // Set border radius
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                             child: TextField(
                               controller: _password,
                               obscureText: true,
                               decoration: InputDecoration(
-                                labelText: _getText(
-                                  "Password",
-                                ),
+                                labelText: _getText("Password"),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      10.0), // Set border radius
-                                  borderSide: BorderSide(
-                                    width: 10.0, // Set border width
-                                    // Set border color to match background
-                                  ),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(),
                                 ),
                               ),
                             ),
@@ -128,15 +120,8 @@ class StudentLoginScreen extends StatelessWidget {
                               children: [
                                 Checkbox(
                                   activeColor: Colors.black,
-                                  value: false, // Set initial value of checkbox
-                                  onChanged: (value) {
-                                    // Handle checkbox value change
-                                    if (value == true) {
-                                      // Add functionality for "Keep me signed in" checkbox
-                                    } else {
-                                      // Remove functionality for "Keep me signed in" checkbox
-                                    }
-                                  },
+                                  value: false,
+                                  onChanged: (value) {},
                                 ),
                                 Text(
                                   _getText("Keep me signed in"),
@@ -144,9 +129,7 @@ class StudentLoginScreen extends StatelessWidget {
                               ],
                             ),
                             TextButton(
-                              onPressed: () {
-                                // Add functionality for "Forgot your password? Reset now" link
-                              },
+                              onPressed: () {},
                               child: Text(
                                 _getText("Forgot your password"),
                                 style: TextStyle(color: Colors.blue),
@@ -175,10 +158,8 @@ class StudentLoginScreen extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // Add functionality for login button
                           String index = _index.text;
                           String password = _password.text;
-
                           checkLogin(context, index, password);
                         },
                         child: Text(
@@ -196,30 +177,29 @@ class StudentLoginScreen extends StatelessWidget {
       ),
     );
   }
-  
-void checkLogin(BuildContext context, String index, String password) {
-  if (index == '123456' && password == '123456') {
-    Navigator.pushNamed(context, '/selected');
-  } else {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('Invalid username or password.'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },  
-            )
-          ],
-        );
-      },
-    );
+
+  void checkLogin(BuildContext context, String index, String password) {
+    // Implement your login logic here
+    if (index == '123456' && password == '123456') {
+      Navigator.pushNamed(context, '/student_portal');
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid username or password.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context); // Dismiss the dialog
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 }
-}
-
-

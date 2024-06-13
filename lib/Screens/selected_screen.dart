@@ -133,7 +133,9 @@ class _SelectedScreenState extends State<SelectedScreen> {
                               ),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/staff_login');
+                          },
                           child: Text(
                             _getText('I\'M AN IBA CAMPUS STAFF'),
                             style: TextStyle(color: Colors.white),
