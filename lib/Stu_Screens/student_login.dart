@@ -180,26 +180,26 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
 
   void checkLogin(BuildContext context, String index, String password) {
     // Implement your login logic here
-    if (index == '123456' && password == '123456') {
+    // if (index == '123456' && password == '123456') {
       Navigator.pushNamed(context, '/student_portal');
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Login Failed'),
-            content: Text('Invalid username or password.'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.pop(context); // Dismiss the dialog
-                },
-              )
-            ],
-          );
-        },
-      );
-    }
+    // } else {
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         title: Text('Login Failed'),
+    //         content: Text('Invalid username or password.'),
+    //         actions: [
+    //           TextButton(
+    //             child: Text('OK'),
+    //             onPressed: () {
+    //               Navigator.pop(context); // Dismiss the dialog
+    //             },
+    //           )
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
   }
 }

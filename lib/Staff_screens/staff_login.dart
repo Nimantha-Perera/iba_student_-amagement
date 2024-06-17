@@ -203,27 +203,27 @@ class StaffLoginScreen extends StatelessWidget {
   }
   
 void checkLogin(BuildContext context, String index, String password) {
-  if (index == '123456' && password == '123456') {
-    Navigator.pushNamed(context, '/selected');
-  } else {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('Invalid username or password.'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },  
-            )
-          ],
-        );
-      },
-    );
-  }
+  // if (index == '123456' && password == '123456') {
+    Navigator.pushNamed(context, '/staff_portal');
+  // } else {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Login Failed'),
+  //         content: Text('Invalid username or password.'),
+  //         actions: [
+  //           TextButton(
+  //             child: Text('OK'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },  
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }
 }
 

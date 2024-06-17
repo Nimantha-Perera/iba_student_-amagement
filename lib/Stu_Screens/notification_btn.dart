@@ -18,7 +18,12 @@ class NotificationIconButton extends StatelessWidget {
             padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: Colors.red,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(50),
+              border: Border.all(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                width: 1,
+                
+              )
             ),
             constraints: BoxConstraints(
               minWidth: 12,
