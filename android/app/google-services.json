@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "308437145477",
+    "project_id": "iba-app-9d4d4",
+    "storage_bucket": "iba-app-9d4d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308437145477:android:f8c0e38580d23a6a4356ec",
+        "android_client_info": {
+          "package_name": "com.example.iba_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2jBMoWSzIxpNh1B7J9Kr33FEfVZFw4H4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

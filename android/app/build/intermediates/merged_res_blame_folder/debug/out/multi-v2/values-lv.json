@@ -1,0 +1,43 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.iba_app-mergeDebugResources-6:/values-lv/values-lv.xml",
+            "map": [
+                {
+                    "source": "E:\\Android\\.gradle\\caches\\transforms-3\\e3855082ba219f65b4f0b71235941cae\\transformed\\core-1.6.0\\res\\values-lv\\values-lv.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "221",
+                        "endColumns": "100",
+                        "endOffsets": "317"
+                    }
+                },
+                {
+                    "source": "E:\\Android\\.gradle\\caches\\transforms-3\\3ed62eb5b0edb80e997aee17168462fe\\transformed\\jetified-play-services-basement-18.3.0\\res\\values-lv\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "161",
+                        "endOffsets": "356"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "165",
+                        "endOffsets": "216"
+                    }
+                }
+            ]
+        }
+    ]
+}

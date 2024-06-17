@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iba_app/Languages/languages.dart';
@@ -8,9 +9,13 @@ import 'package:iba_app/Staff_screens/portal.dart';
 import 'package:iba_app/Staff_screens/staff_login.dart';
 import 'package:iba_app/Stu_Screens/portal.dart';
 import 'package:iba_app/Stu_Screens/student_login.dart';
+import 'package:iba_app/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await LanguageManager.init();
   runApp(
     DevicePreview(

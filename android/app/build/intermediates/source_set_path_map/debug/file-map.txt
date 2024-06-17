@@ -1,0 +1,17 @@
+com.example.iba_app-packaged_res-0 C:\Users\as\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-3.1.0\android\build\intermediates\packaged_res\debug
+com.example.iba_app-packaged_res-1 C:\Users\as\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.2.2\android\build\intermediates\packaged_res\debug
+com.example.iba_app-google-services-2 D:\image_editer\iba_student_-amagement\android\app\build\generated\res\google-services\debug
+com.example.iba_app-pngs-3 D:\image_editer\iba_student_-amagement\android\app\build\generated\res\pngs\debug
+com.example.iba_app-resValues-4 D:\image_editer\iba_student_-amagement\android\app\build\generated\res\resValues\debug
+com.example.iba_app-rs-5 D:\image_editer\iba_student_-amagement\android\app\build\generated\res\rs\debug
+com.example.iba_app-mergeDebugResources-6 D:\image_editer\iba_student_-amagement\android\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir
+com.example.iba_app-mergeDebugResources-7 D:\image_editer\iba_student_-amagement\android\app\build\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+com.example.iba_app-merged_res-8 D:\image_editer\iba_student_-amagement\android\app\build\intermediates\merged_res\debug
+com.example.iba_app-debug-9 D:\image_editer\iba_student_-amagement\android\app\src\debug\res
+com.example.iba_app-main-10 D:\image_editer\iba_student_-amagement\android\app\src\main\res
+com.example.iba_app-jetified-firebase-common-21.0.0-11 E:\Android\.gradle\caches\transforms-3\0d8fa78226d67d091060e228b35a35ee\transformed\jetified-firebase-common-21.0.0\res
+com.example.iba_app-jetified-play-services-basement-18.3.0-12 E:\Android\.gradle\caches\transforms-3\3ed62eb5b0edb80e997aee17168462fe\transformed\jetified-play-services-basement-18.3.0\res
+com.example.iba_app-jetified-annotation-experimental-1.1.0-13 E:\Android\.gradle\caches\transforms-3\d77097bec193a335156ceb69ed73fe72\transformed\jetified-annotation-experimental-1.1.0\res
+com.example.iba_app-jetified-window-1.0.0-beta04-14 E:\Android\.gradle\caches\transforms-3\dcd4ae7877663079e4037730d1afe8e0\transformed\jetified-window-1.0.0-beta04\res
+com.example.iba_app-core-1.6.0-15 E:\Android\.gradle\caches\transforms-3\e3855082ba219f65b4f0b71235941cae\transformed\core-1.6.0\res
+com.example.iba_app-jetified-window-java-1.0.0-beta04-16 E:\Android\.gradle\caches\transforms-3\e91834c42b4823cd82ea59def47b8589\transformed\jetified-window-java-1.0.0-beta04\res
