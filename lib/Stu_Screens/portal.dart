@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iba_app/Languages/languages.dart';
+import 'package:iba_app/Side%20Nav%20Bar/side_nav_stu.dart';
 import 'package:iba_app/Stu_Screens/StudentData.dart';
 import 'package:iba_app/Stu_Screens/notification_btn.dart';
 
@@ -17,7 +18,7 @@ String _getText(String key) {
   return LanguageManager.getText(
       key); // Utilize the LanguageManager to get translated text
 }
-
+final GlobalKey<ScaffoldState> _scaffoldKey2 = GlobalKey<ScaffoldState>();
 class _StudentPortalScreenState extends State<StudentPortalScreen> {
   List<Map<String, dynamic>> _notifications = [];
   @override
@@ -30,11 +31,15 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
     final StudentData args =
         ModalRoute.of(context)!.settings.arguments as StudentData;
     return Scaffold(
+      key: _scaffoldKey2,
+      drawer: SideNavStu(),
       floatingActionButton: ClipRRect(
         borderRadius:
             BorderRadius.circular(30.0), // Set the desired border radius here
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            
+          },
           child: Icon(Icons.call),
           backgroundColor: const Color.fromARGB(255, 61, 61, 61),
           foregroundColor: Colors.white,
@@ -49,7 +54,9 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.menu, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            _scaffoldKey2.currentState?.openDrawer();
+          },
         ),
         actions: [NotificationIconButton()],
       ),
