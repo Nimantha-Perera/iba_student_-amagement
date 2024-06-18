@@ -14,13 +14,7 @@ class SideNavStu extends StatelessWidget {
             
             child: Image.asset("assets/logos/iba_logo.png", scale: 1.5,),
           ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
-            onTap: () {
-              Navigator.pop(context); // close the drawer
-            },
-          ),
+          
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
@@ -31,6 +25,13 @@ class SideNavStu extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.contacts),
             title: Text('Contact'),
+            onTap: () {
+              Navigator.pop(context); // close the drawer
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
             onTap: () {
               Navigator.pop(context); // close the drawer
             },
