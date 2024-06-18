@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:iba_app/Languages/languages.dart';
+import 'package:iba_app/Stu_Screens/StudentData.dart';
 
 class StudentLoginScreen extends StatefulWidget {
   const StudentLoginScreen({Key? key}) : super(key: key);
@@ -12,11 +16,39 @@ class StudentLoginScreen extends StatefulWidget {
 class _StudentLoginScreenState extends State<StudentLoginScreen> {
   TextEditingController _password = TextEditingController();
   TextEditingController _index = TextEditingController();
+  bool _isLoading = false;
+  bool _keepMeSignedIn = false;
 
   @override
   void initState() {
     super.initState();
-    // Initialize text controllers if needed
+    _loadKeepMeSignedIn();
+  }
+
+  void _loadKeepMeSignedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _keepMeSignedIn = prefs.getBool('keepMeSignedIn') ?? false;
+      if (_keepMeSignedIn) {
+        _index.text = prefs.getString('index') ?? '';
+        _password.text = prefs.getString('password') ?? '';
+        if (_index.text.isNotEmpty && _password.text.isNotEmpty) {
+          checkLogin(context, _index.text, _password.text);
+        }
+      }
+    });
+  }
+
+  void _saveKeepMeSignedIn(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('keepMeSignedIn', value);
+    if (value) {
+      prefs.setString('index', _index.text);
+      prefs.setString('password', _password.text);
+    } else {
+      prefs.remove('index');
+      prefs.remove('password');
+    }
   }
 
   String _getText(String key) {
@@ -56,8 +88,6 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                       ),
                     ),
                   ),
-
-                  // Add some space between the title and text fields
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.only(top: 100),
@@ -89,9 +119,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: 10),
-
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -112,7 +140,6 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                             ),
                           ),
                         ),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -120,8 +147,13 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                               children: [
                                 Checkbox(
                                   activeColor: Colors.black,
-                                  value: false,
-                                  onChanged: (value) {},
+                                  value: _keepMeSignedIn,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _keepMeSignedIn = value!;
+                                      _saveKeepMeSignedIn(value);
+                                    });
+                                  },
                                 ),
                                 Text(
                                   _getText("Keep me signed in"),
@@ -157,15 +189,22 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          String index = _index.text;
-                          String password = _password.text;
-                          checkLogin(context, index, password);
-                        },
-                        child: Text(
-                          _getText('LOGIN'),
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                String index = _index.text;
+                                String password = _password.text;
+                                checkLogin(context, index, password);
+                              },
+                        child: _isLoading
+                            ? CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                            : Text(
+                                _getText('LOGIN'),
+                                style: TextStyle(color: Colors.white),
+                              ),
                       ),
                     ),
                   ),
@@ -178,28 +217,58 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
     );
   }
 
-  void checkLogin(BuildContext context, String index, String password) {
-    // Implement your login logic here
-    // if (index == '123456' && password == '123456') {
-      Navigator.pushNamed(context, '/student_portal');
-    // } else {
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //         title: Text('Login Failed'),
-    //         content: Text('Invalid username or password.'),
-    //         actions: [
-    //           TextButton(
-    //             child: Text('OK'),
-    //             onPressed: () {
-    //               Navigator.pop(context); // Dismiss the dialog
-    //             },
-    //           )
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
+  Future<void> checkLogin(BuildContext context, String index, String password) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection('students')
+          .where('index', isEqualTo: index)
+          .limit(1)
+          .get();
+
+      if (userSnapshot.docs.isEmpty) {
+        showErrorDialog(context, 'Login Failed', 'Invalid index number.');
+        print('Error:$userSnapshot');
+      } else {
+        final userData = userSnapshot.docs.first.data();
+        if (userData['password'] == password) {
+          if (_keepMeSignedIn) {
+            _saveKeepMeSignedIn(true);
+          }
+          Navigator.pushNamed(context, '/student_portal', arguments: StudentData(index,userData));
+        } else {
+          showErrorDialog(context, 'Login Failed', 'Invalid password.');
+        }
+      }
+    } catch (e) {
+      showErrorDialog(context, 'Error', 'An error occurred. Please try again.$e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void showErrorDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context); // Dismiss the dialog
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }
