@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SideNavStu extends StatelessWidget {
   @override
@@ -11,10 +12,11 @@ class SideNavStu extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            
-            child: Image.asset("assets/logos/iba_logo.png", scale: 1.5,),
+            child: Image.asset(
+              "assets/logos/iba_logo.png",
+              scale: 1.5,
+            ),
           ),
-          
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
@@ -32,8 +34,16 @@ class SideNavStu extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
-            onTap: () {
-              Navigator.pop(context); // close the drawer
+            onTap: () async {
+              // Close the drawer
+              Navigator.pop(context);
+
+              // Clear user data from shared preferences
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+
+              // Navigate to the login screen
+              Navigator.pushReplacementNamed(context, '/student_login');
             },
           ),
         ],

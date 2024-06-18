@@ -15,31 +15,24 @@ class StudentPortalScreen extends StatefulWidget {
 }
 
 String _getText(String key) {
-  return LanguageManager.getText(
-      key); // Utilize the LanguageManager to get translated text
+  return LanguageManager.getText(key); // Utilize the LanguageManager to get translated text
 }
-final GlobalKey<ScaffoldState> _scaffoldKey2 = GlobalKey<ScaffoldState>();
-class _StudentPortalScreenState extends State<StudentPortalScreen> {
-  List<Map<String, dynamic>> _notifications = [];
-  @override
-  void initState() {
-    super.initState();
-    fetchNotifications(); // Call fetchNotifications when the screen initializes
-  }
 
+final GlobalKey<ScaffoldState> _scaffoldKey2 = GlobalKey<ScaffoldState>();
+
+class _StudentPortalScreenState extends State<StudentPortalScreen> {
+  @override
   Widget build(BuildContext context) {
-    final StudentData args =
-        ModalRoute.of(context)!.settings.arguments as StudentData;
+    final StudentData args = ModalRoute.of(context)!.settings.arguments as StudentData;
+    String batch = args.userData['batch'];
+
     return Scaffold(
       key: _scaffoldKey2,
       drawer: SideNavStu(),
       floatingActionButton: ClipRRect(
-        borderRadius:
-            BorderRadius.circular(30.0), // Set the desired border radius here
+        borderRadius: BorderRadius.circular(30.0), // Set the desired border radius here
         child: FloatingActionButton(
-          onPressed: () {
-            
-          },
+          onPressed: () {},
           child: Icon(Icons.call),
           backgroundColor: const Color.fromARGB(255, 61, 61, 61),
           foregroundColor: Colors.white,
@@ -119,27 +112,18 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                               height: 200,
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
-                                child: _notifications.isNotEmpty
-                                    ? ListView.builder(
-                                        itemCount: _notifications.length,
-                                        itemBuilder: (context, index) {
-                                          // Null check for the message
-                                          final message =
-                                              _notifications[index]['message'];
-                                          return Center(
-                                            child: Text(
-                                              message != null
-                                                  ? message
-                                                  : 'No message available',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Center(
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('notifications')
+                                      .doc(batch)
+                                      .collection('messages')
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Center(child: CircularProgressIndicator());
+                                    }
+                                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                      return Center(
                                         child: Text(
                                           'Notifications is empty',
                                           style: TextStyle(
@@ -147,7 +131,42 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                             color: Colors.black,
                                           ),
                                         ),
-                                      ),
+                                      );
+                                    }
+                                    var notifications = snapshot.data!.docs
+                                        .map((doc) => doc.data() as Map<String, dynamic>)
+                                        .toList();
+                                    return ListView.builder(
+                                      itemCount: notifications.length,
+                                      itemBuilder: (context, index) {
+                                        final message = notifications[index]['message'];
+                                        return Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "• ",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                message != null
+                                                    ? message
+                                                    : 'No message available',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -185,25 +204,20 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                         // Add your onPressed logic here
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 212, 212, 212)),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color.fromARGB(255, 212, 212, 212)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(100, 70)),
+                                        minimumSize: MaterialStateProperty.all(Size(100, 70)),
                                       ),
                                       child: FaIcon(
                                         FontAwesomeIcons.list,
                                         size: 36,
-                                        color: const Color.fromARGB(
-                                            255, 83, 83, 83),
+                                        color: const Color.fromARGB(255, 83, 83, 83),
                                       ),
                                     ),
                                     Text(_getText('Results')),
@@ -218,25 +232,20 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                         // Add your onPressed logic here
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 212, 212, 212)),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color.fromARGB(255, 212, 212, 212)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(100, 70)),
+                                        minimumSize: MaterialStateProperty.all(Size(100, 70)),
                                       ),
                                       child: Icon(
                                         Icons.payment,
                                         size: 40,
-                                        color: const Color.fromARGB(
-                                            255, 83, 83, 83),
+                                        color: const Color.fromARGB(255, 83, 83, 83),
                                       ),
                                     ),
                                     Text(_getText('Payment')),
@@ -251,19 +260,15 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                         // Add your onPressed logic here
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 212, 212, 212)),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color.fromARGB(255, 212, 212, 212)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(100, 70)),
+                                        minimumSize: MaterialStateProperty.all(Size(100, 70)),
                                       ),
                                       child: Icon(
                                         Icons.book,
@@ -289,25 +294,20 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                         // Add your onPressed logic here
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 212, 212, 212)),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color.fromARGB(255, 212, 212, 212)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(100, 70)),
+                                        minimumSize: MaterialStateProperty.all(Size(100, 70)),
                                       ),
                                       child: FaIcon(
                                         FontAwesomeIcons.video,
                                         size: 36,
-                                        color: const Color.fromARGB(
-                                            255, 83, 83, 83),
+                                        color: const Color.fromARGB(255, 83, 83, 83),
                                       ),
                                     ),
                                     Text(_getText('Videos')),
@@ -322,25 +322,20 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                         // Add your onPressed logic here
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 212, 212, 212)),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color.fromARGB(255, 212, 212, 212)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(100, 70)),
+                                        minimumSize: MaterialStateProperty.all(Size(100, 70)),
                                       ),
                                       child: Icon(
                                         Icons.assignment,
                                         size: 40,
-                                        color: const Color.fromARGB(
-                                            255, 83, 83, 83),
+                                        color: const Color.fromARGB(255, 83, 83, 83),
                                       ),
                                     ),
                                     Text(_getText('Online Exams')),
@@ -355,19 +350,15 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
                                         // Add your onPressed logic here
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 212, 212, 212)),
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color.fromARGB(255, 212, 212, 212)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(100, 70)),
+                                        minimumSize: MaterialStateProperty.all(Size(100, 70)),
                                       ),
                                       child: Icon(
                                         Icons.video_camera_front_rounded,
@@ -392,37 +383,5 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
         ),
       ),
     );
-  }
-
-  void fetchNotifications() async {
-    // Wait for the context to be fully initialized
-    await Future.delayed(Duration.zero);
-
-    final StudentData args =
-        ModalRoute.of(context)!.settings.arguments as StudentData;
-
-    String batch = args.userData['batch'];
-
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('notifications')
-          .doc(batch)
-          .get();
-
-      setState(() {
-        if (snapshot.exists) {
-          _notifications = [
-            snapshot.data()!
-          ]; // Store single document data in _notifications
-        } else {
-          _notifications = [];
-          _notifications.add({
-            'message': 'Notifications is empty'
-          }); // If document doesn't exist, set _notifications to empty list
-        }
-      });
-    } catch (e) {
-      print('Error fetching notifications: $e');
-    }
   }
 }
