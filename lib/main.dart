@@ -15,6 +15,13 @@ import 'package:iba_app/Stu_Screens/student_login.dart';
 import 'package:iba_app/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print('Handling a background message: ${message.messageId}');
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -23,7 +30,8 @@ Future<void> main() async {
   String? token = await FirebaseMessaging.instance.getToken();
   print("FCM Token: $token");
   await LanguageManager.init();
-
+  // Handle background messages
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool keepMeSignedIn = prefs.getBool('keepMeSignedIn') ?? false;
   String? index = prefs.getString('index');
@@ -57,12 +65,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       locale: DevicePreview.locale(context), // Add the locale here
-      builder: DevicePreview.appBuilder,    // Add the builder here
+      builder: DevicePreview.appBuilder, // Add the builder here
       useInheritedMediaQuery: true,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: Cloudemassages(),
+      home: keepMeSignedIn ? AutoLoginScreen(index: index, password: password) : StudentLoginScreen(),
       routes: {
         '/student_login': (context) => StudentLoginScreen(),
         '/staff_login': (context) => StaffLoginScreen(),
@@ -78,7 +86,8 @@ class AutoLoginScreen extends StatefulWidget {
   final String? index;
   final String? password;
 
-  const AutoLoginScreen({Key? key, this.index, this.password}) : super(key: key);
+  const AutoLoginScreen({Key? key, this.index, this.password})
+      : super(key: key);
 
   @override
   _AutoLoginScreenState createState() => _AutoLoginScreenState();
@@ -102,8 +111,8 @@ class _AutoLoginScreenState extends State<AutoLoginScreen> {
       if (userSnapshot.docs.isNotEmpty) {
         final userData = userSnapshot.docs.first.data();
         if (userData['password'] == widget.password) {
-          Navigator.pushReplacementNamed(
-              context, '/student_portal', arguments: StudentData(widget.index!, userData));
+          Navigator.pushReplacementNamed(context, '/student_portal',
+              arguments: StudentData(widget.index!, userData));
           return;
         }
       }
