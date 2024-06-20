@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:iba_app/FirebaseMessaging/firebase_messaging.dart';
 import 'package:iba_app/Languages/languages.dart';
 import 'package:iba_app/Screens/selected_screen.dart';
 import 'package:iba_app/Staff_screens/portal.dart';
@@ -18,6 +20,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  String? token = await FirebaseMessaging.instance.getToken();
+  print("FCM Token: $token");
   await LanguageManager.init();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,7 +62,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: keepMeSignedIn ? AutoLoginScreen(index: index, password: password) : const SelectedScreen(),
+      home: Cloudemassages(),
       routes: {
         '/student_login': (context) => StudentLoginScreen(),
         '/staff_login': (context) => StaffLoginScreen(),
