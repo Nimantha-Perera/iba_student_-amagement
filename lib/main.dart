@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -15,37 +14,29 @@ import 'package:iba_app/Stu_Screens/student_login.dart';
 import 'package:iba_app/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
-  print('Handling a background message: ${message.messageId}');
-}
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  String? token = await FirebaseMessaging.instance.getToken();
-  print("FCM Token: $token");
+
   await LanguageManager.init();
   // Handle background messages
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool keepMeSignedIn = prefs.getBool('keepMeSignedIn') ?? false;
   String? index = prefs.getString('index');
   String? password = prefs.getString('password');
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(
+    MyApp(
         keepMeSignedIn: keepMeSignedIn,
         index: index,
         password: password,
       ),
-    ),
+    
   );
 }
 
@@ -64,8 +55,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: DevicePreview.locale(context), // Add the locale here
-      builder: DevicePreview.appBuilder, // Add the builder here
+      
       useInheritedMediaQuery: true,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -98,6 +88,7 @@ class _AutoLoginScreenState extends State<AutoLoginScreen> {
   void initState() {
     super.initState();
     _autoLogin();
+    
   }
 
   Future<void> _autoLogin() async {

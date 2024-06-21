@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iba_app/Languages/languages.dart';
+import 'package:iba_app/Notifications%20Service/notifcation_service.dart';
 import 'package:iba_app/Side%20Nav%20Bar/side_nav_stu.dart';
 import 'package:iba_app/Stu_Screens/StudentData.dart';
 import 'package:iba_app/Stu_Screens/notification_btn.dart';
@@ -21,7 +22,19 @@ String _getText(String key) {
 final GlobalKey<ScaffoldState> _scaffoldKey2 = GlobalKey<ScaffoldState>();
 
 class _StudentPortalScreenState extends State<StudentPortalScreen> {
+  NotificationService notificationService = NotificationService();
   @override
+
+  void initState() {
+    super.initState();
+    notificationService.requestPermission();
+    notificationService.initNotification(context);
+    notificationService.firebaseInit();
+    notificationService.isTokenRefresh();
+    notificationService.getFcmToken().then((value) {
+      print("Token: $value");
+    });
+  }
   Widget build(BuildContext context) {
     final StudentData args = ModalRoute.of(context)!.settings.arguments as StudentData;
     String batch = args.userData['batch'];
