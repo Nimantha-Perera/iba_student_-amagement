@@ -15,6 +15,7 @@ class StudentPortalScreen extends StatefulWidget {
   State<StudentPortalScreen> createState() => _StudentPortalScreenState();
 }
 
+
 String _getText(String key) {
   return LanguageManager.getText(key); // Utilize the LanguageManager to get translated text
 }
@@ -27,13 +28,12 @@ class _StudentPortalScreenState extends State<StudentPortalScreen> {
 
   void initState() {
     super.initState();
-    notificationService.requestPermission();
-    notificationService.initNotification(context);
-    notificationService.firebaseInit();
-    notificationService.isTokenRefresh();
+    notificationService.initialize();
+
     notificationService.getFcmToken().then((value) {
       print("Token: $value");
     });
+    notificationService.onTokenRefresh();
   }
   Widget build(BuildContext context) {
     final StudentData args = ModalRoute.of(context)!.settings.arguments as StudentData;
