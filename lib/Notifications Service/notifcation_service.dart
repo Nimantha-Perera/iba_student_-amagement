@@ -64,6 +64,22 @@ class NotificationService {
       onDidReceiveBackgroundNotificationResponse:
           onDidReceiveBackgroundNotificationResponse,
     );
+
+    _createNotificationChannel();
+  }
+
+  void _createNotificationChannel() {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // name
+      description: 'This channel is used for important notifications.',
+      importance: Importance.high,
+    );
+
+    _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
   }
 
   void _firebaseInit() {
@@ -78,7 +94,7 @@ class NotificationService {
           notification.body,
           NotificationDetails(
             android: AndroidNotificationDetails(
-              'high_importance_channel',
+              'high_importance_channel', // Use the specific channel
               'High Importance Notifications',
               channelDescription:
                   'This channel is used for important notifications.',
