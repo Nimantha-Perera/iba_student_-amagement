@@ -81,6 +81,8 @@ Future<void> _savePermissionStatus(bool granted) async {
       'Class Nofiti', // name
       description: 'This channel is used for important notifications.',
       importance: Importance.high,
+      playSound: true,
+    
     );
 
     _flutterLocalNotificationsPlugin
