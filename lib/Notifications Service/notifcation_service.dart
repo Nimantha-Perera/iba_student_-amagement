@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -32,26 +33,32 @@ class NotificationService {
     _firebaseInit();
   }
 
-  Future<void> _requestPermission() async {
-    NotificationSettings settings = await _messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+ Future<void> _requestPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  // Check stored permission status
+  bool storedPermission = prefs.getBool('notificationPermission') ?? false;
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User denied permission');
-    }
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  bool granted = settings.authorizationStatus == AuthorizationStatus.authorized;
+
+  if (storedPermission != granted) {
+    // If stored permission does not match device's current permission, update it
+    await _savePermissionStatus(granted);
   }
+}
+
+Future<void> _savePermissionStatus(bool granted) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('notificationPermission', granted);
+}
+
 
   void _initializeLocalNotifications() {
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -71,7 +78,7 @@ class NotificationService {
   void _createNotificationChannel() {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'high_importance_channel', // id
-      'High Importance Notifications', // name
+      'Class Nofiti', // name
       description: 'This channel is used for important notifications.',
       importance: Importance.high,
     );
